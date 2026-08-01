@@ -1,190 +1,145 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import {
-  Coffee,
-  ShoppingBag,
-  Grid,
-  ChefHat,
-  UtensilsCrossed,
-  Package,
-  BarChart3,
-  Receipt,
-  Settings,
-  Clock,
-  UserCheck
-} from 'lucide-react'
-import { POSModule } from '@/lib/pos-store'
-import { StaffMember } from '@/lib/types'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Menu, X, ShoppingBag, Sparkles, Coffee } from 'lucide-react'
 
 interface NavigationProps {
-  activeModule: POSModule
-  setActiveModule: (module: POSModule) => void
-  activeOrderCount?: number
-  activeKitchenCount?: number
-  currentStaff: StaffMember
-  cafeName: string
+  onOpenPOS?: () => void
 }
 
-export function Navigation({
-  activeModule,
-  setActiveModule,
-  activeKitchenCount = 0,
-  currentStaff,
-  cafeName
-}: NavigationProps) {
-  const [time, setTime] = useState<string>('')
-  const [dateStr, setDateStr] = useState<string>('')
+export function Navigation({ onOpenPOS }: NavigationProps) {
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    const updateTime = () => {
-      const now = new Date()
-      setTime(
-        now.toLocaleTimeString('en-US', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: true
-        })
-      )
-      setDateStr(
-        now.toLocaleDateString('en-US', {
-          weekday: 'short',
-          month: 'short',
-          day: 'numeric'
-        })
-      )
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20)
     }
-    updateTime()
-    const timer = setInterval(updateTime, 1000)
-    return () => clearInterval(timer)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const navItems = [
-    { id: 'pos' as POSModule, label: 'POS Terminal', icon: ShoppingBag },
-    { id: 'tables' as POSModule, label: 'Tables Floor', icon: Grid },
-    {
-      id: 'kitchen' as POSModule,
-      label: 'Kitchen KDS',
-      icon: ChefHat,
-      badge: activeKitchenCount > 0 ? activeKitchenCount : undefined
-    },
-    { id: 'menu' as POSModule, label: 'Menu Catalog', icon: UtensilsCrossed },
-    { id: 'inventory' as POSModule, label: 'Inventory', icon: Package },
-    { id: 'analytics' as POSModule, label: 'Analytics', icon: BarChart3 },
-    { id: 'orders' as POSModule, label: 'Order History', icon: Receipt },
-    { id: 'settings' as POSModule, label: 'Settings', icon: Settings }
+  const navLinks = [
+    { name: 'FLAVOURS', href: '#flavours' },
+    { name: 'FORMULA', href: '#formula' },
+    { name: 'ACTIVATIONS', href: '#activations' },
+    { name: 'SOCIAL', href: '#social' },
   ]
 
   return (
-    <header className="sticky top-0 z-50 bg-[#161311]/95 backdrop-blur-md border-b border-amber-900/30 px-4 py-2.5 shadow-xl">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-        {/* Left Branding */}
-        <div className="flex items-center gap-3 shrink-0">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-500/20 text-stone-950 font-bold">
-            <Coffee className="w-6 h-6 stroke-[2.5]" />
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? 'bg-[#121212]/80 backdrop-blur-md border-b border-white/10 py-3'
+          : 'bg-transparent py-5'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        {/* Logo */}
+        <a href="#" className="flex items-center gap-2 group">
+          <div className="w-9 h-9 rounded-xl bg-[#AFFF00] flex items-center justify-center text-[#121212] font-black group-hover:scale-105 transition-transform">
+            <Coffee className="w-5 h-5 stroke-[2.5]" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-extrabold text-lg text-stone-100 tracking-tight leading-none">
-                {cafeName}
-              </h1>
-              <span className="text-[10px] uppercase font-bold tracking-widest bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded">
-                POS
-              </span>
-            </div>
-            <p className="text-[11px] text-stone-400 font-medium">Smart Fullstack POS</p>
-          </div>
-        </div>
+          <span className="text-2xl font-black tracking-tighter text-[#121212] dark:text-white">
+            BITE<span className="text-[#AFFF00]">EAT</span>
+          </span>
+        </a>
 
-        {/* Center Module Navigation Tabs */}
-        <nav className="hidden lg:flex items-center gap-1 bg-stone-900/80 p-1 rounded-xl border border-stone-800/80">
-          {navItems.map((item) => {
-            const Icon = item.icon
-            const isActive = activeModule === item.id
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveModule(item.id)}
-                className={`relative flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 ${
-                  isActive
-                    ? 'bg-amber-500 text-stone-950 shadow-md shadow-amber-500/25'
-                    : 'text-stone-300 hover:text-white hover:bg-stone-800/60'
-                }`}
-              >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-stone-950' : 'text-stone-400'}`} />
-                <span>{item.label}</span>
-                {item.badge !== undefined && (
-                  <span
-                    className={`ml-0.5 px-1.5 py-0.2 text-[10px] font-black rounded-full ${
-                      isActive ? 'bg-stone-950 text-amber-400' : 'bg-amber-500 text-stone-950 animate-pulse'
-                    }`}
-                  >
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            )
-          })}
+        {/* Desktop Nav Links */}
+        <nav className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              className="text-xs font-mono font-bold tracking-widest text-[#121212]/70 dark:text-white/70 hover:text-[#121212] dark:hover:text-[#AFFF00] transition-colors"
+            >
+              {link.name}
+            </a>
+          ))}
         </nav>
 
-        {/* Right Info: Live Clock & Staff Profile */}
-        <div className="flex items-center gap-3 shrink-0">
-          {/* Clock */}
-          <div className="hidden md:flex flex-col items-end border-r border-stone-800 pr-3">
-            <div className="flex items-center gap-1 text-xs font-mono font-bold text-amber-400">
-              <Clock className="w-3.5 h-3.5 text-amber-500" />
-              <span>{time}</span>
-            </div>
-            <span className="text-[10px] text-stone-400 font-medium">{dateStr}</span>
-          </div>
+        {/* Right CTA Actions */}
+        <div className="hidden md:flex items-center gap-3">
+          {onOpenPOS && (
+            <button
+              onClick={onOpenPOS}
+              className="bg-[#121212] hover:bg-[#222222] text-[#AFFF00] border border-[#AFFF00]/40 px-4 py-2 rounded-full font-mono text-xs font-bold tracking-wider flex items-center gap-2 shadow-lg transition-all hover:scale-105"
+            >
+              <ShoppingBag className="w-3.5 h-3.5" />
+              <span>LAUNCH POS SYSTEM</span>
+            </button>
+          )}
 
-          {/* Active Staff */}
-          <div className="flex items-center gap-2.5 bg-stone-900 px-2.5 py-1.5 rounded-xl border border-stone-800">
-            <img
-              src={currentStaff.avatar}
-              alt={currentStaff.name}
-              className="w-7 h-7 rounded-full object-cover border border-amber-500/40"
-            />
-            <div className="hidden sm:block text-left">
-              <div className="flex items-center gap-1">
-                <span className="text-xs font-bold text-stone-200">{currentStaff.name}</span>
-                <UserCheck className="w-3 h-3 text-emerald-400" />
-              </div>
-              <span className="text-[10px] uppercase tracking-wider text-amber-500 font-semibold">
-                {currentStaff.role}
-              </span>
-            </div>
-          </div>
+          <a
+            href="#flavours"
+            className="bg-[#AFFF00] hover:bg-[#bbf028] text-[#121212] px-5 py-2 rounded-full font-bold text-xs tracking-wider transition-all hover:scale-105"
+          >
+            ORDER NOW
+          </a>
+        </div>
+
+        {/* Mobile Hamburger */}
+        <div className="flex md:hidden items-center gap-2">
+          {onOpenPOS && (
+            <button
+              onClick={onOpenPOS}
+              className="bg-[#121212] text-[#AFFF00] border border-[#AFFF00]/30 px-3 py-1.5 rounded-full font-mono text-[10px] font-bold"
+            >
+              POS
+            </button>
+          )}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 text-[#121212] dark:text-white"
+          >
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
       </div>
 
-      {/* Mobile Bar for module switching */}
-      <div className="flex lg:hidden overflow-x-auto gap-1 mt-2.5 pt-2 border-t border-stone-800 pb-0.5 no-scrollbar">
-        {navItems.map((item) => {
-          const Icon = item.icon
-          const isActive = activeModule === item.id
-          return (
-            <button
-              key={item.id}
-              onClick={() => setActiveModule(item.id)}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-                isActive
-                  ? 'bg-amber-500 text-stone-950 font-bold'
-                  : 'bg-stone-900 text-stone-300 border border-stone-800'
-              }`}
-            >
-              <Icon className="w-3.5 h-3.5" />
-              <span>{item.label}</span>
-              {item.badge !== undefined && (
-                <span className="px-1.5 py-0.2 text-[9px] bg-red-500 text-white rounded-full font-bold">
-                  {item.badge}
-                </span>
+      {/* Mobile Drawer */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-[#121212] border-b border-white/10 px-6 py-6 space-y-4"
+          >
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block text-sm font-mono font-bold tracking-widest text-white/80 hover:text-[#AFFF00]"
+              >
+                {link.name}
+              </a>
+            ))}
+            <div className="pt-4 border-t border-white/10 flex flex-col gap-2">
+              {onOpenPOS && (
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false)
+                    onOpenPOS()
+                  }}
+                  className="w-full bg-[#121212] text-[#AFFF00] border border-[#AFFF00]/40 py-2.5 rounded-full font-mono text-xs font-bold text-center"
+                >
+                  LAUNCH POS SYSTEM
+                </button>
               )}
-            </button>
-          )
-        })}
-      </div>
+              <a
+                href="#flavours"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full bg-[#AFFF00] text-[#121212] font-bold text-xs py-2.5 rounded-full text-center"
+              >
+                ORDER NOW
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   )
 }

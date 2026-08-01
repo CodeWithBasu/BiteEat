@@ -2,13 +2,9 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ShoppingBag, Sparkles, Coffee } from 'lucide-react'
+import { Menu, X, Coffee } from 'lucide-react'
 
-interface NavigationProps {
-  onOpenPOS?: () => void
-}
-
-export function Navigation({ onOpenPOS }: NavigationProps) {
+export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
@@ -59,36 +55,18 @@ export function Navigation({ onOpenPOS }: NavigationProps) {
           ))}
         </nav>
 
-        {/* Right CTA Actions */}
+        {/* Right CTA */}
         <div className="hidden md:flex items-center gap-3">
-          {onOpenPOS && (
-            <button
-              onClick={onOpenPOS}
-              className="bg-[#121212] hover:bg-[#222222] text-[#AFFF00] border border-[#AFFF00]/40 px-4 py-2 rounded-full font-mono text-xs font-bold tracking-wider flex items-center gap-2 shadow-lg transition-all hover:scale-105"
-            >
-              <ShoppingBag className="w-3.5 h-3.5" />
-              <span>LAUNCH POS SYSTEM</span>
-            </button>
-          )}
-
           <a
             href="#flavours"
-            className="bg-[#AFFF00] hover:bg-[#bbf028] text-[#121212] px-5 py-2 rounded-full font-bold text-xs tracking-wider transition-all hover:scale-105"
+            className="bg-[#AFFF00] hover:bg-[#bbf028] text-[#121212] px-5 py-2 rounded-full font-bold text-xs tracking-wider transition-all hover:scale-105 shadow-md"
           >
             ORDER NOW
           </a>
         </div>
 
         {/* Mobile Hamburger */}
-        <div className="flex md:hidden items-center gap-2">
-          {onOpenPOS && (
-            <button
-              onClick={onOpenPOS}
-              className="bg-[#121212] text-[#AFFF00] border border-[#AFFF00]/30 px-3 py-1.5 rounded-full font-mono text-[10px] font-bold"
-            >
-              POS
-            </button>
-          )}
+        <div className="flex md:hidden items-center">
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="p-2 text-[#121212] dark:text-white"
@@ -117,18 +95,7 @@ export function Navigation({ onOpenPOS }: NavigationProps) {
                 {link.name}
               </a>
             ))}
-            <div className="pt-4 border-t border-white/10 flex flex-col gap-2">
-              {onOpenPOS && (
-                <button
-                  onClick={() => {
-                    setIsMobileMenuOpen(false)
-                    onOpenPOS()
-                  }}
-                  className="w-full bg-[#121212] text-[#AFFF00] border border-[#AFFF00]/40 py-2.5 rounded-full font-mono text-xs font-bold text-center"
-                >
-                  LAUNCH POS SYSTEM
-                </button>
-              )}
+            <div className="pt-4 border-t border-white/10">
               <a
                 href="#flavours"
                 onClick={() => setIsMobileMenuOpen(false)}

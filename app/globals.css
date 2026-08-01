@@ -4,33 +4,54 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.12 0.015 45);
-  --foreground: oklch(0.96 0.01 60);
-  --card: oklch(0.17 0.02 45);
-  --card-foreground: oklch(0.96 0.01 60);
-  --popover: oklch(0.15 0.02 45);
-  --popover-foreground: oklch(0.96 0.01 60);
-  --primary: oklch(0.75 0.18 55);
-  --primary-foreground: oklch(0.12 0.02 45);
-  --secondary: oklch(0.24 0.03 45);
-  --secondary-foreground: oklch(0.96 0.01 60);
-  --muted: oklch(0.22 0.02 45);
-  --muted-foreground: oklch(0.7 0.02 60);
-  --accent: oklch(0.75 0.18 55);
-  --accent-foreground: oklch(0.12 0.02 45);
-  --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.26 0.025 45);
-  --input: oklch(0.24 0.025 45);
-  --ring: oklch(0.75 0.18 55);
-  --radius: 0.75rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(0.98 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.145 0 0);
+  --primary-foreground: oklch(0.92 0.2 128);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.145 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.4 0 0);
+  --accent: oklch(0.92 0.2 128);
+  --accent-foreground: oklch(0.145 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border: oklch(0.9 0 0);
+  --input: oklch(0.9 0 0);
+  --ring: oklch(0.92 0.2 128);
+  --radius: 0.5rem;
 
-  /* Custom BiteEat Cafe Status Colors */
-  --status-available: #10B981;
-  --status-occupied: #F59E0B;
-  --status-billing: #8B5CF6;
-  --status-reserved: #3B82F6;
-  --amber-accent: #F59E0B;
+  /* Custom GiGi / BiteEat colors */
+  --lime: oklch(0.92 0.2 128);
+  --charcoal: oklch(0.145 0 0);
+  --pineapple: oklch(0.9 0.15 90);
+  --coconut: oklch(0.95 0.03 90);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
 }
 
 @theme inline {
@@ -59,6 +80,12 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Custom theme colors */
+  --color-lime: var(--lime);
+  --color-charcoal: var(--charcoal);
+  --color-pineapple: var(--pineapple);
+  --color-coconut: var(--coconut);
 }
 
 @layer base {
@@ -66,55 +93,80 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground selection:bg-amber-500/30 selection:text-amber-200 antialiased;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    @apply bg-background text-foreground;
   }
 }
 
-/* Custom Touch-Friendly Scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: rgba(30, 25, 20, 0.4);
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(245, 158, 11, 0.25);
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(245, 158, 11, 0.5);
-}
-
-/* Custom Keyframe Animations for Kitchen & POS Notifications */
-@keyframes pulse-ring {
-  0% {
-    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
-  }
+/* Custom Animations */
+@keyframes float {
+  0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
-  }
-}
-
-@keyframes pulse-urgent {
-  0%, 100% {
-    border-color: rgba(239, 68, 68, 0.8);
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+    transform: translateY(0px) rotate(0deg);
   }
   50% {
-    border-color: rgba(239, 68, 68, 0.3);
-    box-shadow: 0 0 5px rgba(239, 68, 68, 0.1);
+    transform: translateY(-20px) rotate(3deg);
   }
 }
 
-.animate-pulse-ring {
-  animation: pulse-ring 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(175, 255, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(175, 255, 0, 0.6);
+  }
 }
 
-.animate-urgent {
-  animation: pulse-urgent 1.5s ease-in-out infinite;
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes grain {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-5%, -10%);
+  }
+  30% {
+    transform: translate(3%, -15%);
+  }
+  50% {
+    transform: translate(12%, 9%);
+  }
+  70% {
+    transform: translate(9%, 4%);
+  }
+  90% {
+    transform: translate(-1%, 7%);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+.noise-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  animation: grain 8s steps(10) infinite;
 }
